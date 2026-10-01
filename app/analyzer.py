@@ -5,6 +5,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from typing import AsyncGenerator
 
+from app.engine_status import mark_failed, mark_loaded
 from app.schemas import (
     AnalysisReport,
     EngineResult,
@@ -175,7 +176,17 @@ def shutdown_analyzer() -> None:
 
 
 def _run_engine(engine, text: str) -> EngineResult:
-    return engine.analyze(text)
+    result = engine.analyze(text)
+    engine_key = next((key for key, candidate in _engines if candidate is engine), None)
+    if engine_key is None:
+        return result
+
+    if result.details and result.details.startswith("Model loading failed:"):
+        mark_failed(engine_key, result.details)
+    else:
+        mark_loaded(engine_key)
+
+    return result
 
 
 def get_engine_list() -> list[tuple[str, str, str]]:
