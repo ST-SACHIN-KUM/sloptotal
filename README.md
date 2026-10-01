@@ -173,6 +173,14 @@ curl -X POST http://localhost:8000/api/analyze \
   -d '{"text": "Your text to analyze here..."}'
 ```
 
+From Python, [`examples/python_client.py`](examples/python_client.py) analyses a
+text, prints the five engines scoring highest and runs a site check, waiting
+in the queue when the server is busy:
+
+```bash
+python examples/python_client.py "Paste at least 50 characters of text here..." example.com
+```
+
 The response lists every engine with its score, verdict and a plain-language
 detail line, plus `overall_score` (0-100) and `overall_verdict`.
 
