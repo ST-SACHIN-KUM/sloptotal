@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/pablocaeg/sloptotal/actions/workflows/ci.yml?query=branch%3Amaster"><img src="https://github.com/pablocaeg/sloptotal/actions/workflows/ci.yml/badge.svg?branch=master&event=push" alt="CI"></a>
+  <a href="https://github.com/pablocaeg/sloptotal/actions/workflows/ci.yml?query=branch%3Amaster"><img src="https://img.shields.io/github/actions/workflow/status/pablocaeg/sloptotal/ci.yml?branch=master&event=push&label=CI" alt="CI status"></a>
   <a href="https://github.com/pablocaeg/sloptotal/releases"><img src="https://img.shields.io/github/v/release/pablocaeg/sloptotal?color=b5282e" alt="Latest release"></a>
   <a href="https://github.com/pablocaeg/sloptotal/pkgs/container/sloptotal"><img src="https://img.shields.io/badge/docker-ghcr.io-1a1a18?logo=docker&logoColor=white" alt="Docker image"></a>
   <img src="https://img.shields.io/badge/python-3.10%2B-3d3b37" alt="Python 3.10+">
@@ -164,12 +164,21 @@ curl -X POST http://localhost:8000/api/scan/site \
 | `/api/scan/urls` | POST | Batch of 1-10 URLs, page-type aware | 1-5 s |
 | `/api/engines` | GET | Engine metadata | instant |
 | `/api/report/{id}` | GET | A stored report | instant |
+| `/api/report/{id}/feedback` | POST | Record who actually wrote the text: `{"label": "human" \| "ai" \| "mixed" \| "unsure"}` | instant |
 | `/api/queue/status` | GET | Queue capacity | instant |
 
 ```bash
 curl -X POST http://localhost:8000/api/analyze \
   -H "Content-Type: application/json" \
   -d '{"text": "Your text to analyze here..."}'
+```
+
+From Python, [`examples/python_client.py`](examples/python_client.py) analyses a
+text, prints the five engines scoring highest and runs a site check, waiting
+in the queue when the server is busy:
+
+```bash
+python examples/python_client.py "Paste at least 50 characters of text here..." example.com
 ```
 
 The response lists every engine with its score, verdict and a plain-language
