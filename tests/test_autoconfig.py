@@ -11,7 +11,6 @@ from app.autoconfig import choose_profile, compute_config
         ({"cuda_available": False, "gpu_vram_gb": 0.0, "ram_gb": 7.9}, "lite"),
     ],
 )
-
 def test_choose_profile_from_hardware(hw, expected, monkeypatch):
     monkeypatch.delenv("SLOPTOTAL_PROFILE", raising=False)
     assert choose_profile(hw) == expected
@@ -59,12 +58,11 @@ def test_choose_profile_ignores_invalid_override(monkeypatch):
         ),
     ],
 )
-def test_compute_config_worker_counts(hw, profile, expected_snippet_workers, expected_full_workers):
+def test_compute_config_worker_counts(
+    hw, profile, expected_snippet_workers, expected_full_workers
+):
     config = compute_config(hw, profile)
     snippet_workers = int(config["SLOPTOTAL_SNIPPET_WORKERS"])
     full_workers = int(config["SLOPTOTAL_FULL_WORKERS"])
     assert snippet_workers > 0
     assert full_workers > 0
-
-
-
